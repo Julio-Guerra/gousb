@@ -350,14 +350,13 @@ func (libusbImpl) reset(d *libusbDevHandle) error {
 }
 
 func (libusbImpl) control(d *libusbDevHandle, timeout time.Duration, rType, request uint8, val, idx uint16, data []byte) (int, error) {
-	dataSlice := (*reflect.SliceHeader)(unsafe.Pointer(&data))
 	n := C.libusb_control_transfer(
 		(*C.libusb_device_handle)(d),
 		C.uint8_t(rType),
 		C.uint8_t(request),
 		C.uint16_t(val),
 		C.uint16_t(idx),
-		(*C.uchar)(unsafe.Pointer(dataSlice.Data)),
+		(*C.uchar)(unsafe.Pointer(reflect.ValueOf(data).Pointer())),
 		C.uint16_t(len(data)),
 		C.uint(timeout/time.Millisecond))
 	if n < 0 {
