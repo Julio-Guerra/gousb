@@ -41,10 +41,16 @@ type libusbTransfer C.struct_libusb_transfer
 type libusbEndpoint C.struct_libusb_endpoint_descriptor
 
 func (ep libusbEndpoint) endpointDesc(dev *DeviceDesc) EndpointDesc {
+	var direction EndpointDirection
+	if uint8(ep.bEndpointAddress&endpointDirectionMask) == uint8(EndpointDirectionIn) {
+		direction = EndpointDirectionIn
+	} else {
+		direction = EndpointDirectionOut
+	}
 	ei := EndpointDesc{
 		Address:       EndpointAddress(ep.bEndpointAddress),
 		Number:        int(ep.bEndpointAddress & endpointNumMask),
-		Direction:     EndpointDirection((ep.bEndpointAddress & endpointDirectionMask) != 0),
+		Direction:     direction,
 		TransferType:  TransferType(ep.bmAttributes & transferTypeMask),
 		MaxPacketSize: int(ep.wMaxPacketSize),
 	}

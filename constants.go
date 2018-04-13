@@ -102,15 +102,15 @@ func (dt DescriptorType) String() string {
 
 // EndpointDirection defines the direction of data flow - IN (device to host)
 // or OUT (host to device).
-type EndpointDirection bool
+type EndpointDirection uint8
 
 const (
 	endpointNumMask       = 0x0f
 	endpointDirectionMask = 0x80
 	// EndpointDirectionIn marks data flowing from device to host.
-	EndpointDirectionIn EndpointDirection = true
+	EndpointDirectionIn EndpointDirection = C.LIBUSB_ENDPOINT_IN
 	// EndpointDirectionOut marks data flowing from host to device.
-	EndpointDirectionOut EndpointDirection = false
+	EndpointDirectionOut EndpointDirection = C.LIBUSB_ENDPOINT_OUT
 )
 
 var endpointDirectionDescription = map[EndpointDirection]string{
